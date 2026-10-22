@@ -8,6 +8,7 @@ from scipy.io import wavfile
 from script import SCENES
 
 # Uso:
+#   python3 voice.py elevenlabs                 (lee ELEVENLABS_API_KEY y ELEVENLABS_VOICE_ID; ver voices_elevenlabs.py)
 #   python3 voice.py azure                      (voz es-PE-CamilaNeural; lee AZURE_SPEECH_KEY y AZURE_SPEECH_REGION)
 #   python3 voice.py kokoro /ruta/a/kokoro-multi-lang-v1_0
 ENGINE = sys.argv[1] if len(sys.argv) > 1 else "azure"
@@ -20,7 +21,34 @@ LEAD = {"S01": 0.4, "S09": 3.8, "S11": 0.8, "S17": 1.6}
 TAIL = {"S06": 3.0, "S08": 4.5, "S09": 2.6, "S16": 3.0, "S17": 6.5}
 DEFAULT_LEAD, DEFAULT_TAIL = 0.6, 1.9
 
-if ENGINE == "azure":
+if ENGINE == "elevenlabs":
+    EL_KEY = os.environ["ELEVENLABS_API_KEY"]
+    EL_VOICE = os.environ["ELEVENLABS_VOICE_ID"]
+    EL_MODEL = os.environ.get("ELEVENLABS_MODEL", "eleven_multilingual_v2")
+    SAY = {"EDU": "Edu"}
+    CACHE = f"{ROOT}/audio-src/.cache/elevenlabs-{EL_VOICE}"
+    os.makedirs(CACHE, exist_ok=True)
+
+    def raw(text):
+        body = json.dumps({
+            "text": text,
+            "model_id": EL_MODEL,
+            "language_code": "es",
+            "voice_settings": {"stability": 0.45, "similarity_boost": 0.8, "style": 0.25, "use_speaker_boost": True, "speed": 0.95},
+        }).encode()
+        path = f"{CACHE}/{hashlib.sha1(body).hexdigest()[:16]}.mp3"
+        if not os.path.exists(path):
+            req = urllib.request.Request(
+                f"https://api.elevenlabs.io/v1/text-to-speech/{EL_VOICE}?output_format=mp3_44100_128",
+                data=body, headers={"xi-api-key": EL_KEY, "Content-Type": "application/json", "Accept": "audio/mpeg"})
+            with urllib.request.urlopen(req, timeout=120) as r, open(path, "wb") as f:
+                f.write(r.read())
+        wav = path[:-4] + ".wav"
+        if not os.path.exists(wav):
+            subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", path, "-ac", "1", "-ar", "44100", wav], check=True)
+        sr, x = wavfile.read(wav)
+        return x.astype(np.float32) / 32768, sr
+elif ENGINE == "azure":
     AZ_KEY = os.environ["AZURE_SPEECH_KEY"]
     AZ_REGION = os.environ.get("AZURE_SPEECH_REGION", "eastus")
     AZ_VOICE = os.environ.get("AZURE_SPEECH_VOICE", "es-PE-CamilaNeural")

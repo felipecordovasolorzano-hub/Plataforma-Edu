@@ -1,7 +1,10 @@
 import React from 'react';
 import {interpolate, useCurrentFrame} from 'remotion';
-import {Carolina, EduBot, Kid} from './characters';
-import {Clock, Icon, IconName, PhoneShape} from './icons';
+import {EduBot3D} from '../edu3d/EduBot3D';
+import {Phone3D} from '../edu3d/Phone3D';
+import {Stage3D} from '../edu3d/Stage3D';
+import {Carolina, Kid} from './characters';
+import {Clock, Icon, IconName} from './icons';
 import {Checklist, Notebook, Table} from './scenesProblem';
 import {C, Camera, Caption, CreamBg, FPS, NightBg, Sfx, Stage, bob, easeInOut, glide, lerp, pop, prog, s, useCues} from './theme';
 
@@ -24,6 +27,11 @@ export const S9: React.FC = () => {
 	return (
 		<NightBg glow="#10283A">
 			<CreamCircle r={bloom * 2400} />
+			{bot > 0 && (
+				<Stage3D>
+					<EduBot3D x={botX} y={botY + bob(f, 12, 3.2)} scale={1.35 * bot * (1 + 0.06 * Math.sin(Math.PI * absorb))} glow={0.6 + 0.6 * absorb} happy={t > e(1)} armsOpen={t > c(2) ? 1 : 0} spin={1 - prog(f, reveal, 1.6, easeInOut)} />
+				</Stage3D>
+			)}
 			<Stage>
 				{bloom < 0.6 && dot > 0 && (
 					<g opacity={1 - bloom * 1.6}>
@@ -46,7 +54,6 @@ export const S9: React.FC = () => {
 							</g>
 						);
 					})}
-				{bot > 0 && <EduBot x={botX} y={botY + bob(f, 12, 3.2)} scale={1.35 * bot * (1 + 0.06 * Math.sin(Math.PI * absorb))} glow={0.6 + 0.6 * absorb} happy={t > e(1)} armsOpen={t > c(2) ? 1 : 0} />}
 				{fam > 0 && (
 					<g>
 						<Carolina x={lerp(-260, 520, fam)} y={1000} scale={0.95} walk={famWalk ? t * 9 : null} mood="smile" lookX={6} seed={10} />
@@ -117,18 +124,20 @@ export const S10: React.FC = () => {
 	return (
 		<CreamBg>
 			<Camera from={1} to={1.04}>
+				<Stage3D>
+					{phoneIn > 0 && <Phone3D x={px} y={py} screenH={620 * pk} rot={[0.25 * (1 - phoneIn), -1.3 * (1 - phoneIn), 0]} layers={[{color: '#EEF2F7', opacity: 1}]} />}
+					<EduBot3D x={bx} y={by + bob(f, 10, 3.2)} scale={1.15} armsOpen={1} happy={f > s(c(1) + 2.5)} glow={prog(f, gatherAt, 0.4) * (1 - prog(f, gatherAt + 1.2, 0.6))} />
+				</Stage3D>
 				<Stage>
 					{phoneIn > 0 && (
 						<g transform={`translate(${px} ${py}) scale(${pk}) translate(${-PHONE[0]} ${-PHONE[1]})`}>
 							{center > 0 && <circle cx={PHONE[0]} cy={PHONE[1]} r={420} fill={C.teal} opacity={0.1 * center} />}
-							<PhoneShape x={PHONE[0]} y={PHONE[1]} w={330} h={660} stroke={C.night} fill={C.night} screen="#EEF2F7" />
 							{S10_CARDS.map((card, j) => {
 								const slot = prog(f, c(1) + 0.5 + j * 0.45, 0.6, easeInOut);
 								return slot > 0 ? <Card key={j} icon={card.icon} x={lerp(BOT[0] - (px - PHONE[0]) / pk, PHONE[0], slot)} y={lerp(BOT[1], PHONE[1] + SLOT_Y[j], slot)} scale={lerp(0.4, 1, slot)} /> : null;
 							})}
 						</g>
 					)}
-					<EduBot x={bx} y={by + bob(f, 10, 3.2)} scale={1.15} armsOpen={1} happy={f > s(c(1) + 2.5)} glow={prog(f, gatherAt, 0.4) * (1 - prog(f, gatherAt + 1.2, 0.6))} />
 					{S10_CARDS.map((card, j) => {
 						const k = pop(f, p(0, j), 12);
 						const fly = prog(f, gatherAt + j * 0.08, 0.7, easeInOut);
@@ -258,9 +267,9 @@ export const S17: React.FC = () => {
 	const out = prog(f, seconds - 2.2, 2.0, easeInOut);
 	return (
 		<CreamBg>
-			<Stage>
-				<EduBot x={960} y={370 + bob(f, 12, 3.2)} scale={1.3 * bot} happy={f > s(c(1))} glow={prog(f, c(0), 0.6)} armsOpen={f > s(c(1)) ? 1 : 0} />
-			</Stage>
+			<Stage3D>
+				<EduBot3D x={960} y={370 + bob(f, 12, 3.2)} scale={1.3 * bot} happy={f > s(c(1))} glow={prog(f, c(0), 0.6)} armsOpen={f > s(c(1)) ? 1 : 0} spin={1 - prog(f, 0.25, 1.4, easeInOut)} />
+			</Stage3D>
 			<Caption text="EDU" at={c(0)} y={690} size={170} color={C.night} />
 			<Caption text={'Menos tiempo buscando.\nMás tiempo compartiendo.'} at={c(1)} y={850} size={54} weight={700} color={C.night} accent={null} />
 			<div style={{position: 'absolute', inset: 0, background: C.cream, opacity: out}} />

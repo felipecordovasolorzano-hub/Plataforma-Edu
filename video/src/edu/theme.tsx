@@ -79,6 +79,8 @@ export const useCues = () => {
 		p: (i: number, j: number) => cues[i]?.parts[j]?.start ?? cues[i]?.start ?? 999,
 		pe: (i: number, j: number) => cues[i]?.parts[j]?.end ?? cues[i]?.end ?? 999,
 		seconds: sc?.seconds ?? 10,
+		/** Scene start in the full video (s), for motion that must stay continuous across cuts. */
+		start: sc?.start ?? 0,
 	};
 };
 

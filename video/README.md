@@ -25,7 +25,9 @@ Regenerar el audio después de cambiar el guion (requiere `pip install sherpa-on
 
 ```console
 cd audio-src
-python3 voice.py azure        # voz es-PE-CamilaNeural (requiere AZURE_SPEECH_KEY y AZURE_SPEECH_REGION)
+python3 voices_elevenlabs.py   # muestras de voces en .cache/muestras (requiere ELEVENLABS_API_KEY)
+ELEVENLABS_VOICE_ID=<id> python3 voice.py elevenlabs
+# o: python3 voice.py azure   (es-PE-CamilaNeural; requiere AZURE_SPEECH_KEY y AZURE_SPEECH_REGION)
 # o, sin conexión: python3 voice.py kokoro /ruta/a/kokoro-multi-lang-v1_0
 python3 music.py
 python3 sfx.py
@@ -37,6 +39,7 @@ python3 sfx.py
 - `src/edu/scenesProblem.tsx`: S1 a S8 (contexto, problema y consecuencia; fondo azul noche).
 - `src/edu/scenesSolution.tsx`: S9, S10 y S15 a S17 (solución, beneficio y cierre; fondo crema).
 - `src/edu/scenesDemo.tsx`: S11 a S14, con capturas reales del prototipo.
+- `src/edu3d/`: piezas en three.js (EDU en 3D y el celular 3D con las capturas). El render usa WebGL (`angle`, configurado en `remotion.config.ts`).
 - `src/edu/characters.tsx`: Carolina, Mateo y EDU (respiran, parpadean, caminan).
 - `src/edu/theme.tsx`: colores, tipografía, textos animados, fondos y utilidades.
 - `public/capturas/`: capturas del prototipo (vista móvil, perfil Padres, hijo Mateo).

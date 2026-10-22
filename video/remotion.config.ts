@@ -8,3 +8,6 @@ import { Config } from "@remotion/cli/config";
 Config.setRspack(true);
 Config.setVideoImageFormat("jpeg");
 Config.setOverwriteOutput(true);
+
+// three.js (EDU y el celular 3D) necesita WebGL al renderizar.
+Config.setChromiumOpenGlRenderer("angle");
