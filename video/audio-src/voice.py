@@ -29,13 +29,23 @@ if ENGINE == "elevenlabs":
     CACHE = f"{ROOT}/audio-src/.cache/elevenlabs-{EL_VOICE}"
     os.makedirs(CACHE, exist_ok=True)
 
+    # Tomas fijadas para frases que salieron mal la primera vez (verificadas con Whisper).
+    RETAKES = {
+        "y en circulares de papel.": {"seed": 2, "stability": 0.6, "style": 0.15},
+        "Una hora después, recién pueden empezar.": {"seed": 2, "stability": 0.6, "style": 0.15},
+    }
+
     def raw(text):
-        body = json.dumps({
+        fix = RETAKES.get(text, {})
+        payload = {
             "text": text,
             "model_id": EL_MODEL,
             "language_code": "es",
-            "voice_settings": {"stability": 0.45, "similarity_boost": 0.8, "style": 0.25, "use_speaker_boost": True, "speed": 0.95},
-        }).encode()
+            "voice_settings": {"stability": fix.get("stability", 0.45), "similarity_boost": 0.8, "style": fix.get("style", 0.25), "use_speaker_boost": True, "speed": 0.95},
+        }
+        if "seed" in fix:
+            payload["seed"] = fix["seed"]
+        body = json.dumps(payload).encode()
         path = f"{CACHE}/{hashlib.sha1(body).hexdigest()[:16]}.mp3"
         if not os.path.exists(path):
             req = urllib.request.Request(
