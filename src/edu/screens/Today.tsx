@@ -13,6 +13,7 @@ export const Today: React.FC = () => {
   const bring = mine.flatMap(t => t.materials.filter(m => m.forKey === tomorrow).map(m => ({ ...m, taskId: t.id, course: t.course })));
   const todayWs = workshops.filter(w => w.childId === childId && w.days.includes(weekdayToday));
   const nextWs = workshops.filter(w => w.childId === childId).map(w => ({ ...w, next: w.days.find(d => d > weekdayToday) ?? w.days[0] }));
+  const pendingTomorrow = dueTomorrow.filter(t => t.status !== 'completada');
   const doneCount = dueTomorrow.filter(t => t.status === 'completada').length;
   const current = mine.find(t => t.id === session.taskId);
 
@@ -24,7 +25,7 @@ export const Today: React.FC = () => {
         <p className="text-[13px] font-semibold text-slate-500">Jueves 12 de noviembre · {fmtClock(clock)}</p>
         <h1 className="text-[26px] font-black leading-tight text-slate-900">Hola, {PARENT_NAME} 👋</h1>
         <p className="mt-0.5 text-[14px] text-slate-600">
-          {dueTomorrow.length ? <>Para mañana, {child.name} tiene <b>{dueTomorrow.length} {dueTomorrow.length === 1 ? 'pendiente' : 'pendientes'}</b>{bring.length ? <> y debe llevar <b>{bring.length} {bring.length === 1 ? 'cosa' : 'cosas'}</b></> : null}.</> : <>{child.name} no tiene pendientes para mañana.</>}
+          {pendingTomorrow.length ? <>Para mañana, {child.name} tiene <b>{pendingTomorrow.length} {pendingTomorrow.length === 1 ? 'pendiente' : 'pendientes'}</b>{bring.length ? <> y debe llevar <b>{bring.length} {bring.length === 1 ? 'cosa' : 'cosas'}</b></> : null}.</> : <>{child.name} ya terminó lo de mañana{bring.length ? <> y debe llevar <b>{bring.length} {bring.length === 1 ? 'cosa' : 'cosas'}</b></> : null}.</>}
         </p>
       </div>
 
@@ -60,7 +61,7 @@ export const Today: React.FC = () => {
         ) : (
           <Card className="mt-4 p-4" onClick={() => setOverlay({ kind: 'device' })}>
             <div className="flex items-center gap-3">
-              <div className="rounded-2xl bg-slate-950 p-1"><EduFace expr="reposo" size={60} dim /></div>
+              <div className="rounded-2xl bg-slate-950 p-1"><EduFace expr="reposo" size={60} /></div>
               <div className="flex-1">
                 <p className="text-[15px] font-extrabold text-slate-900">Hora de tareas: {fmtTime24(settings.homeworkTime)}</p>
                 <p className="text-[13px] text-slate-600">EDU llamará a {child.name} y te avisará cuando empiece y cuando termine.</p>

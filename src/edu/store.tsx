@@ -201,7 +201,7 @@ function useEduState() {
     const msg = chat.find(m => m.id === msgId); const teacher = msg?.card?.type === 'slots' ? msg.card.teacher : 'la docente';
     window.setTimeout(() => {
       setChat(c => [...c, { id: uid('c'), from: 'edu', text: `Listo. Envié la solicitud de cita a ${teacher} para el ${slot} por SieWeb. Te aviso cuando la confirme.` }]);
-      notify({ kind: 'cita', title: 'Solicitud de cita enviada', body: `${teacher} · ${slot}. Te avisaremos cuando la confirme.` });
+      notify({ kind: 'cita', title: 'Solicitud de cita enviada', body: `Con ${teacher} para el ${slot}; te avisaremos cuando la confirme.` });
     }, 600);
   };
 

@@ -15,6 +15,7 @@ export const courseColor = (c: string) => COURSE_COLOR[c] ?? '#475569';
 // ---------- Rostro de EDU (mismas expresiones que el dispositivo) ----------
 export const EduFace: React.FC<{ expr: Expression; size?: number; dim?: boolean }> = ({ expr, size = 120, dim }) => {
   const s = '#e8f6ff';
+  const fid = `glow-${React.useId().replace(/[^a-zA-Z0-9_-]/g, '')}`;
   const eye = (cx: number) => {
     switch (expr) {
       case 'feliz': return <path d={`M${cx - 11} 46 Q${cx} 32 ${cx + 11} 46`} stroke={s} strokeWidth="6" fill="none" strokeLinecap="round" />;
@@ -26,9 +27,9 @@ export const EduFace: React.FC<{ expr: Expression; size?: number; dim?: boolean 
   };
   return (
     <svg viewBox="0 0 140 100" width={size} height={size * 100 / 140} aria-label={`EDU: ${expr}`}>
-      <defs><filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="2.2" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter></defs>
+      <defs><filter id={fid} filterUnits="userSpaceOnUse" x="0" y="0" width="140" height="100"><feGaussianBlur stdDeviation="2.2" result="b" /><feMerge><feMergeNode in="b" /><feMergeNode in="SourceGraphic" /></feMerge></filter></defs>
       <rect x="2" y="2" width="136" height="96" rx="30" fill="#060a12" stroke="#3d8bff" strokeWidth="3" />
-      <g filter="url(#glow)" opacity={dim ? 0.55 : 1}>
+      <g filter={`url(#${fid})`} opacity={dim ? 0.55 : 1}>
         {expr === 'guino' ? (<>{eye(48)}<path d="M81 46 Q92 32 103 46" stroke={s} strokeWidth="6" fill="none" strokeLinecap="round" /></>) : (<>{eye(48)}{eye(92)}</>)}
         {expr === 'ayuda' && (<>
           <line x1="38" y1="31" x2="56" y2="27" stroke={s} strokeWidth="4" strokeLinecap="round" />
