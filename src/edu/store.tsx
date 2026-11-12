@@ -44,6 +44,8 @@ function useEduState() {
   const [session, setSession] = useState<Session>(freshSession);
   const [chat, setChat] = useState<ChatMsg[]>([]);
   const [typing, setTyping] = useState(false);
+  const [reminders, setReminders] = useState<Record<string, string>>({});
+  const [calendarSync, setCalendarSync] = useState(false);
   const taskStart = useRef<number>(0);
   const toastTimer = useRef<number | undefined>(undefined);
 
@@ -206,6 +208,7 @@ function useEduState() {
   };
 
   const resetDemo = () => {
+    setReminders({}); setCalendarSync(false);
     setTasks(TASKS); setNotifs(INITIAL_NOTIFS); setSession(freshSession()); setClock(START_CLOCK); setChat([]);
     setWorkshops(WORKSHOPS); setConnections(CONNECTIONS); setSettings(INITIAL_SETTINGS); setTab('hoy'); setOverlay(null); setChildId('mateo');
   };
@@ -216,6 +219,7 @@ function useEduState() {
     onboarded, finishOnboarding, restartOnboarding, childId, setChildId, tab, setTab, overlay, setOverlay,
     connections, setConnections, tasks, setTasks, workshops, setWorkshops, notifs, setNotifs, toast, setToast,
     settings, setSettings, clock, session, sim, chat, typing, ask, chooseSlot, resetDemo, notify,
+    reminders, setReminders, calendarSync, setCalendarSync,
     today: TODAY, tomorrow: TOMORROW, weekdayToday: weekdayIndex(TODAY),
   };
 }
