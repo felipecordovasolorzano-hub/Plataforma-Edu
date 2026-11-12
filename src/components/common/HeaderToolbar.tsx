@@ -16,12 +16,15 @@ import {
   Layers,
   ShieldCheck,
   School,
+  LogOut,
 } from 'lucide-react';
 
 export const HeaderToolbar: React.FC = () => {
   const {
     role,
     setRole,
+    currentUser,
+    logout,
     themeColor,
     setThemeColor,
     simulateTeacherMaterialChange,
@@ -62,49 +65,31 @@ export const HeaderToolbar: React.FC = () => {
                 </span>
               </div>
               <span className="hidden md:block text-[11px] text-slate-500 font-medium">
-                Plataforma Escolar Inteligente · Colegio San Agustín
+                Colegio San Agustín
               </span>
             </div>
           </div>
         </div>
 
-        {/* Role Switcher (High Fidelity Pills) */}
-        <div className="flex items-center bg-slate-100/80 p-1 rounded-2xl border border-slate-200/80 shadow-2xs">
-          <button
-            onClick={() => setRole('parent')}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
-              role === 'parent'
-                ? 'bg-white text-slate-900 shadow-xs scale-[1.01]'
-                : 'text-slate-500 hover:text-slate-800'
-            }`}
-          >
-            <Users className={`w-3.5 h-3.5 ${role === 'parent' ? currentTheme.primaryText : 'text-slate-400'}`} />
-            <span>Padre / Tutor</span>
-          </button>
-
-          <button
-            onClick={() => setRole('teacher')}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
-              role === 'teacher'
-                ? 'bg-white text-slate-900 shadow-xs scale-[1.01]'
-                : 'text-slate-500 hover:text-slate-800'
-            }`}
-          >
-            <GraduationCap className={`w-3.5 h-3.5 ${role === 'teacher' ? currentTheme.primaryText : 'text-slate-400'}`} />
-            <span>Docente</span>
-          </button>
-
-          <button
-            onClick={() => setRole('student')}
-            className={`flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-bold rounded-xl transition-all ${
-              role === 'student'
-                ? 'bg-white text-slate-900 shadow-xs scale-[1.01]'
-                : 'text-slate-500 hover:text-slate-800'
-            }`}
-          >
-            <Sparkles className={`w-3.5 h-3.5 ${role === 'student' ? currentTheme.primaryText : 'text-slate-400'}`} />
-            <span>Estudiante</span>
-          </button>
+        {/* Active Portal Badge (Definido exclusivamente por el login - USER REQUIREMENT) */}
+        <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-2xl bg-slate-50 border border-slate-200/90 text-xs shadow-2xs">
+          {role === 'parent' ? (
+            <>
+              <div className="w-2 h-2 rounded-full bg-blue-600" />
+              <Users className="w-3.5 h-3.5 text-blue-600" />
+              <span className="font-bold text-slate-800">Portal de Familia</span>
+              <span className="text-slate-300">·</span>
+              <span className="text-slate-500 font-medium">Apoderados</span>
+            </>
+          ) : (
+            <>
+              <div className="w-2 h-2 rounded-full bg-indigo-600" />
+              <GraduationCap className="w-3.5 h-3.5 text-indigo-600" />
+              <span className="font-bold text-slate-800">Portal Docente</span>
+              <span className="text-slate-300">·</span>
+              <span className="text-slate-500 font-medium">Gestión Pedagógica</span>
+            </>
+          )}
         </div>
 
         {/* Right Tools: Theme Customizer, WhatsApp Alert Center & Scenarios */}
@@ -218,10 +203,37 @@ export const HeaderToolbar: React.FC = () => {
           <button
             onClick={resetAllData}
             title="Restablecer datos originales de la plataforma"
-            className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-colors"
+            className="p-2 text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
           >
             <RefreshCw className="w-3.5 h-3.5" />
           </button>
+
+          {/* User profile info & Logout button */}
+          {currentUser && (
+            <div className="flex items-center gap-1.5 pl-2 border-l border-slate-200">
+              <div className="hidden xl:flex items-center gap-2">
+                <img
+                  src={currentUser.avatarImg}
+                  alt={currentUser.name}
+                  className="w-7 h-7 rounded-lg object-cover border border-slate-200"
+                />
+                <div className="text-left leading-tight">
+                  <p className="text-xs font-bold text-slate-900 truncate max-w-[120px]">{currentUser.name}</p>
+                  <p className="text-[10px] text-slate-500 truncate max-w-[120px]">{currentUser.title}</p>
+                </div>
+              </div>
+
+              <button
+                onClick={logout}
+                className="flex items-center gap-1.5 py-1.5 px-2.5 text-xs font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-xl transition-all shadow-2xs cursor-pointer ml-1"
+                title="Cerrar sesión y volver al login"
+                aria-label="Cerrar sesión"
+              >
+                <LogOut className="w-3.5 h-3.5 text-rose-600" />
+                <span className="hidden sm:inline">Cerrar sesión</span>
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </header>

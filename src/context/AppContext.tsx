@@ -35,11 +35,57 @@ export interface ToastMessage {
   type?: 'neutral' | 'success' | 'warning' | 'whatsapp';
 }
 
+export interface CurrentUser {
+  id: string;
+  name: string;
+  email: string;
+  role: Role;
+  avatarImg: string;
+  title: string;
+  details: string;
+}
+
+export const DEMO_USERS: Record<Role, CurrentUser> = {
+  parent: {
+    id: 'user-parent',
+    name: 'Carolina Solórzano',
+    email: 'carolina.solorzano@familia.edu.pe',
+    role: 'parent',
+    avatarImg: 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=200',
+    title: 'Apoderada / Familia',
+    details: 'Madre de Mateo (5to Sec) y Lucía (2do Prim)',
+  },
+  teacher: {
+    id: 'user-teacher',
+    name: 'Prof. Carlos Mendoza',
+    email: 'carlos.mendoza@agustin.edu.pe',
+    role: 'teacher',
+    avatarImg: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200',
+    title: 'Docente y Tutor de Aula',
+    details: 'Matemática y Tutoría · 3ro y 5to Sec',
+  },
+  student: {
+    id: 'user-student',
+    name: 'Mateo Solórzano',
+    email: 'mateo.solorzano@agustin.edu.pe',
+    role: 'student',
+    avatarImg: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?auto=format&fit=crop&q=80&w=200',
+    title: 'Estudiante',
+    details: '5to de Secundaria · Sección B',
+  },
+};
+
 interface AppContextType {
   role: Role;
   setRole: (role: Role) => void;
   deviceFrame: DeviceFrame;
   setDeviceFrame: (frame: DeviceFrame) => void;
+  
+  // Authentication & Login (USER REQUIREMENT)
+  isAuthenticated: boolean;
+  currentUser: CurrentUser | null;
+  login: (role: Role) => void;
+  logout: () => void;
   
   // High-Fidelity Color Theme Customization
   themeColor: ThemeColor;
@@ -133,8 +179,31 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 
 export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [role, setRole] = useState<Role>('parent');
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [currentUser, setCurrentUser] = useState<CurrentUser | null>(null);
   const [deviceFrame, setDeviceFrame] = useState<DeviceFrame>('responsive');
   const [themeColor, setThemeColor] = useState<ThemeColor>('blue');
+
+  const handleSetRole = (newRole: Role) => {
+    setRole(newRole);
+    if (isAuthenticated) {
+      setCurrentUser(DEMO_USERS[newRole]);
+    }
+  };
+
+  const login = (targetRole: Role) => {
+    setRole(targetRole);
+    setCurrentUser(DEMO_USERS[targetRole]);
+    setIsAuthenticated(true);
+    const user = DEMO_USERS[targetRole];
+    showToast(`Bienvenido(a), ${user.name} (${user.title})`, 'success');
+  };
+
+  const logout = () => {
+    setIsAuthenticated(false);
+    setCurrentUser(null);
+    showToast('Sesión cerrada. Regresando al portal de ingreso.', 'neutral');
+  };
 
   const [childrenList] = useState<Child[]>(INITIAL_CHILDREN);
   const [activeChildId, setActiveChildId] = useState<ChildId>('mateo');
@@ -635,7 +704,11 @@ export const AppProvider: React.FC<{ children: React.ReactNode }> = ({ children 
     <AppContext.Provider
       value={{
         role,
-        setRole,
+        setRole: handleSetRole,
+        isAuthenticated,
+        currentUser,
+        login,
+        logout,
         deviceFrame,
         setDeviceFrame,
         themeColor,

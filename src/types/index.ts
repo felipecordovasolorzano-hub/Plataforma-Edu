@@ -19,14 +19,19 @@ export interface Child {
 
 export type TaskType = 'tarea' | 'evaluacion' | 'material' | 'trabajo';
 
+export type TaskPriority = 'alta' | 'media' | 'normal';
+
 export interface Task {
   id: string;
   childId: ChildId;
   title: string;
   course: string;
   type: TaskType;
-  // School deadline set by teacher (read-only for family)
-  schoolDueDate: string; // e.g., 'Mañana, 6:00 p. m.'
+  priority?: TaskPriority;
+  dueDayKey?: string; // YYYY-MM-DD for calendar mapping
+  dueDayLabel?: string; // Friendly text without hours: e.g. "Viernes 26 Sep"
+  // School deadline set by teacher (read-only for family - without artificial hours)
+  schoolDueDate: string; // e.g., 'Viernes 26 Sep' or 'Mañana (Viernes)'
   schoolDueTimestamp: string; // ISO date string for sorting/logic
   // Family scheduling (custom time to do the homework at home)
   familyScheduleDate?: string; // e.g., 'Hoy, 5:00 p. m.'

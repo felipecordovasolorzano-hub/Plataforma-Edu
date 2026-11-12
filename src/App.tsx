@@ -6,6 +6,7 @@ import { WhatsAppDrawer } from './components/whatsapp/WhatsAppDrawer';
 import { ParentView } from './components/parent/ParentView';
 import { TeacherDashboard } from './components/teacher/TeacherDashboard';
 import { StudentView } from './components/student/StudentView';
+import { LoginView } from './components/auth/LoginView';
 import { THEME_CONFIGS } from './utils/theme';
 import {
   Info,
@@ -22,9 +23,19 @@ import {
 } from 'lucide-react';
 
 const MainContent: React.FC = () => {
-  const { role, themeColor } = useApp();
+  const { role, themeColor, isAuthenticated, login } = useApp();
   const [isGuideOpen, setIsGuideOpen] = useState<boolean>(false);
   const theme = THEME_CONFIGS[themeColor];
+
+  // If not logged in, display the Login Screen (USER REQUIREMENT)
+  if (!isAuthenticated) {
+    return (
+      <>
+        <LoginView onLogin={(targetRole) => login(targetRole)} />
+        <ToastContainer />
+      </>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-50/70 flex flex-col font-sans text-slate-800">
@@ -59,45 +70,45 @@ const MainContent: React.FC = () => {
             <div className="mt-4 pt-4 border-t border-slate-200 grid grid-cols-1 md:grid-cols-4 gap-4 text-slate-600 animate-in fade-in leading-relaxed">
               <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2">
                 <div className="flex items-center gap-2 font-bold text-slate-900">
-                  <Palette className={`w-4 h-4 ${theme.primaryText}`} />
-                  <span>Personalización de Color</span>
+                  <Calendar className="w-4 h-4 text-blue-600" />
+                  <span>Calendario & Entregas por Día</span>
                 </div>
                 <ul className="space-y-1 text-xs">
-                  <li>• <strong>Paletas armónicas:</strong> Azul Institucional, Verde Educación, Tonos Cálidos e Índigo.</li>
-                  <li>• <strong>Consistencia:</strong> Aplica de forma sutil a botones, bordes, estados activos y focus rings.</li>
+                  <li>• <strong>Calendario interactivo central:</strong> Con leyenda sencilla y filtro dinámico por día clickeado.</li>
+                  <li>• <strong>Sin horas límite forzadas:</strong> Tareas organizadas estrictamente por día escolar y prioridad (Alta, Media, Normal).</li>
                 </ul>
               </div>
 
               <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2">
                 <div className="flex items-center gap-2 font-bold text-slate-900">
-                  <Calendar className="w-4 h-4 text-blue-600" />
-                  <span>Citas y Reuniones con Docentes</span>
+                  <Sparkles className={`w-4 h-4 ${theme.primaryText}`} />
+                  <span>Personaje Flotante (EDU)</span>
                 </div>
                 <ul className="space-y-1 text-xs">
-                  <li>• <strong>Padres:</strong> Selector de profesor, motivo pedagógico, calendario visual de bloques y modalidad.</li>
-                  <li>• <strong>Docente:</strong> Panel para confirmar, reprogramar y redactar notas para las familias.</li>
+                  <li>• <strong>Flotante en la esquina inferior:</strong> Siempre accesible sin estorbar la vista principal.</li>
+                  <li>• <strong>Preguntas contextuales por ventana:</strong> Sugiere dudas según la pantalla activa (calendario, tareas, citas o útiles).</li>
                 </ul>
               </div>
 
               <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2">
                 <div className="flex items-center gap-2 font-bold text-slate-900">
                   <Layers className="w-4 h-4 text-purple-600" />
-                  <span>Selector de Cursos / Secciones</span>
+                  <span>Menú Lateral Derecho</span>
                 </div>
                 <ul className="space-y-1 text-xs">
-                  <li>• <strong>Docente multiturno:</strong> Alterna entre 3.° B, 3.° A, 4.° B y adapta el aula y asistencia.</li>
-                  <li>• <strong>Métricas en vivo:</strong> Cómputo de asistencia RFID y registro de incidencias en &lt; 3 clics.</li>
+                  <li>• <strong>Espacio liberado:</strong> Se eliminó la barra horizontal saturada; módulos secundarios en panel lateral derecho.</li>
+                  <li>• <strong>Acceso rápido:</strong> Citas con docentes, materiales/útiles, alertas RFID y rutinas sin perder el foco central.</li>
                 </ul>
               </div>
 
               <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2">
                 <div className="flex items-center gap-2 font-bold text-slate-900">
                   <MessageCircle className="w-4 h-4 text-emerald-600" />
-                  <span>Canal Oficial WhatsApp</span>
+                  <span>Citas y Alertas WhatsApp</span>
                 </div>
                 <ul className="space-y-1 text-xs">
-                  <li>• <strong>Alertas estructuradas:</strong> Tareas publicadas, entrega de evidencias y citas confirmadas.</li>
-                  <li>• <strong>Drawer lateral:</strong> Simulación de mensajes oficiales con números y destinatarios reales.</li>
+                  <li>• <strong>Gestión docente y familiar:</strong> Solicitud de citas en 3 clics y panel de aprobación del profesor.</li>
+                  <li>• <strong>Simulación en vivo:</strong> Canal WhatsApp oficial con registro de cambios y asistencias.</li>
                 </ul>
               </div>
             </div>

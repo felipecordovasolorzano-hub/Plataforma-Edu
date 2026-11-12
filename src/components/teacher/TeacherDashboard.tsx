@@ -17,6 +17,7 @@ import {
   GraduationCap,
   DoorOpen,
   CheckCircle2,
+  LogOut,
 } from 'lucide-react';
 
 export const TeacherDashboard: React.FC = () => {
@@ -30,6 +31,7 @@ export const TeacherDashboard: React.FC = () => {
     meetingRequests,
     themeColor,
     showToast,
+    logout,
   } = useApp();
 
   const theme = THEME_CONFIGS[themeColor];
@@ -140,10 +142,20 @@ export const TeacherDashboard: React.FC = () => {
 
           <button
             onClick={() => setIsCreatorOpen(true)}
-            className={`flex items-center gap-2 py-3 px-4 text-xs font-bold text-white rounded-2xl transition-all shadow-xs ${theme.primaryBg} ${theme.primaryHover}`}
+            className={`flex items-center gap-2 py-3 px-4 text-xs font-bold text-white rounded-2xl transition-all shadow-xs ${theme.primaryBg} ${theme.primaryHover} cursor-pointer`}
           >
             <Sparkles className="w-4 h-4" />
             <span>Publicar tarea con IA</span>
+          </button>
+
+          <button
+            onClick={logout}
+            className="flex items-center gap-1.5 py-3 px-3.5 text-xs font-bold text-rose-700 bg-rose-50 hover:bg-rose-100 border border-rose-200 rounded-2xl transition-all shadow-2xs cursor-pointer"
+            title="Cerrar sesión de docente"
+            aria-label="Cerrar sesión"
+          >
+            <LogOut className="w-4 h-4 text-rose-600" />
+            <span className="hidden sm:inline">Cerrar sesión</span>
           </button>
         </div>
       </div>
