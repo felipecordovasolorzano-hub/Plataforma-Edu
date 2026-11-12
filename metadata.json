@@ -1,6 +1,5 @@
 {
-  "name": "EduSense · Plataforma Educativa Inteligente",
-  "description": "Plataforma EdTech de super alta fidelidad para el ecosistema escolar: agenda diaria y tareas para familias, gestión de aula y cursos para docentes, agendamiento de citas y tutorías, y hub de autonomía estudiantil.",
-  "requestFramePermissions": [],
-  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+  "name": "EDU · App para padres",
+  "description": "Prototipo de la app EDU: se conecta a las plataformas escolares existentes, ordena la información para los padres y se integra con la lámpara EDU que guía al niño paso a paso sin hacerle la tarea.",
+  "requestFramePermissions": []
 }

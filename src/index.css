@@ -1,14 +1,23 @@
 @import "tailwindcss";
 
-@layer base {
-  body {
-    font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  }
+@theme {
+  --color-edu: #2f5fae;
+  --color-edu-dark: #22467f;
+  --color-edu-soft: #eaf1fb;
+  --color-sky-edu: #3d8bff;
+  --font-sans: 'Nunito', 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif;
 }
 
-/* Subtle modern glassmorphism utility */
-.glass-panel {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+@layer base {
+  html, body, #root { height: 100%; }
+  body { font-family: var(--font-sans); -webkit-tap-highlight-color: transparent; }
+  button { cursor: pointer; }
 }
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { scrollbar-width: none; }
+
+@keyframes write { to { stroke-dashoffset: 0; } }
+@keyframes blink { 50% { opacity: .25; } }
+@keyframes scan { 0% { transform: translateY(-100%); } 100% { transform: translateY(100%); } }
+.live-dot { animation: blink 1.2s infinite; }
